@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+{% block title %}注册{% endblock %}
+
+{% block main %}
+
+<div class="wrap">
+
+  <div class="card">
+
+    <div class="text-center mb-4">
+      <div class="title-0">创建账号</div>
+      <div class="text-secondary">请填写注册信息</div>
+    </div>
+
+    <form action="/register" method="post">
+
+      <!--用户名-->
+      <span class="tip">账号至少4位,密码至少8位</span>
+      <div class="mb-3 position-relative">
+        <i class="input-icon bi bi-person-circle"></i>
+        <input autocomplete="off" required name="name" type="text"
+               class="form-control" placeholder="用户名">
+      </div>
+
+      <!-- 账号 -->
+      <div class="mb-3 position-relative">
+        <i class="input-icon bi bi-person-circle"></i>
+        <input autocomplete="off" required name="username" type="text"
+               class="form-control" placeholder="账号">
+      </div>
+
+      <!-- 密码 -->
+      <div class="mb-3 position-relative">
+        <i class="input-icon bi bi-lock-fill"></i>
+        <input autocomplete="off" required name="password" type="password"
+               class="form-control" placeholder="密码">
+      </div>
+
+      <!-- 确认密码 -->
+      <div class="mb-3 position-relative">
+        <i class="input-icon bi bi-shield-lock-fill"></i>
+        <input autocomplete="off" required name="confirmation" type="password"
+               class="form-control" placeholder="确认密码">
+      </div>
+
+      <!-- 注册按钮 -->
+      <button class="btn btn-primary w-100 py-2" type="submit">注册</button>
+      <p class="error"><strong>{{error}}</strong></p>
+
+    </form>
+
+    <div class="text-center mt-3">
+      <small>已经有账号？  
+        <a href="/login" class="text-decoration-none">去登录</a>
+      </small>
+    </div>
+
+  </div>
+
+</div>
+
+
+{% endblock %}

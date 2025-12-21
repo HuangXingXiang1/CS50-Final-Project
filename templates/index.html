@@ -1,0 +1,118 @@
+{% extends "layout.html" %}
+
+{% block title %}聊天室{% endblock %}
+
+{% block main %}
+{% if room %}
+    <div>
+      <div class="message-box">
+        <div class="header">
+          <span class="left" id="number"></span>
+          <sapn class="right">房间令牌: {{room.token}}</span>
+          <div class="title">
+            <h2 class="i">{{room.name}}</h2>
+          </div>
+        </div>
+        <div class="messages" id="messages"></div>
+        <div class="inputs">
+          <input type="text" placeholder="Message" name="message" id="message" autofocus>
+          <button type="button" name="send" id="send-btn" >Send</button>
+        </div>
+      </div>
+      <div>
+      <form action="/create" method="post">
+        {% for room in user_rooms %}
+          <button class="btn-1" name = chat_join type="submit" value={{room.token}}>{{room.name}}</button>
+        {% endfor %}
+      </form>
+      </div>
+    </div>
+    <script>
+      // 获取DOM元素
+      const messageDiv = document.getElementById("messages")
+      const messageInput = document.getElementById("message")
+      const messageSent = document.getElementById("send-btn")
+      
+      
+      // 创建消息函数
+      const createMessage = (name, msg, time) =>{
+        const msDiv = document.createElement("div");
+        msDiv.className = "text";
+        const nameEl  = document.createElement("strong");
+        const msgEl  = document.createElement("span");
+        const timeEl  = document.createElement("em");
+        timeEl.className = "time";
+
+        nameEl.textContent = name+": ";
+        msgEl.textContent = msg;
+        timeEl.textContent = time;
+
+        msDiv.appendChild(timeEl);
+        msDiv.appendChild(nameEl);
+        msDiv.appendChild(msgEl);
+        messageDiv.appendChild(msDiv)
+
+        messageDiv.scrollTop = messageDiv.scrollHeight;
+      }
+      // 将注入的历史信息过滤
+      const history = {{history | tojson | safe}};
+
+      // 确认传来的数据是否真的可以被遍历,遍历历史信息并显示
+      if (Array.isArray(history)){
+      history.forEach((row) =>{
+        createMessage(row.name, row.content, row.create_time);
+      })};
+      // 连接到Socket.IO服务器
+      // 自动检测协议，使用对应的WebSocket协议
+      const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+      const socket = io(protocol + window.location.host, {
+        path: '/socket.io',
+        transports: ['websocket']  // 优先使用WebSocket
+      });
+
+      // 监听消息事件
+      socket.on("message", data=>{
+        if ("member" in data){
+          document.getElementById("number").innerHTML = "<strong>人数</strong>: " + data.member;
+        }
+        createMessage(data.name, data.message, data.create_time)
+      })
+      // 发送消息函数
+      const sendMessage = (msg) => {
+        if (msg.trim() === "") return;
+        socket.emit("message", {"message": msg});
+        messageInput.value = "";
+      }
+      // 监听输入框的回车事件和发送按钮的点击事件
+      messageInput.addEventListener("keydown", event =>{
+        if (event.key === "Enter" && !event.shiftKey){
+          event.preventDefault();
+          sendMessage(messageInput.value);
+        }
+      })
+      messageSent.addEventListener("click", event =>{
+          sendMessage(messageInput.value);
+      })
+    </script>
+{% elif not user_rooms %}
+<div class="title">
+  <h2>您还没有创造/加入任何聊天室</h2>
+  </div>
+  <button class="btn-1" onclick="location.href='/create'">去创造/加入聊天室</button>
+{% else %}
+<div class="title">
+  <h2>请选择一个聊天室</h2>
+</div>
+  <hr>
+  <form action="/create" method="post">
+    {% for room in user_rooms %}
+      <button class="btn-1" name = chat_join type="submit" value={{room.token}}>{{room.name}}</button>
+    {% endfor %}
+  </form>
+
+{% endif %}
+
+{% endblock %}
+
+
+ 

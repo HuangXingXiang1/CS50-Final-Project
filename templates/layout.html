@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+
+    <title>{% block title %}{% endblock %}</title>
+
+    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/style.css" rel="stylesheet">
+    <script 
+      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" 
+      integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" 
+      crossorigin="anonymous">
+    </script>
+
+    <style>
+      .avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <!-- 顶部导航 -->
+    <nav class="nvbg navbar navbar-expand-lg navbar-dark">
+      <div class="container-fluid">
+
+        <!-- LOGO -->
+        <a class="navbar-brand fw-bold" href="/select" alt = "网站LOGO">
+          <img class="avatar" src="{{url_for('static', filename='logo.png')}}">
+        </a>
+
+        <span>聊天室</span>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="切换导航">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+
+          {% if session.get("user_id") %}
+            <ul class="navbar-nav align-items-center">
+
+              <li class="nav-item">
+                <a class="nav-link" href="/introduce">介绍</a>
+              </li>
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle d-flex align-items-center" href="" id="userMenu"
+                   role="button" data-bs-toggle="dropdown">
+                  菜单
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><a class="dropdown-item" href="/create">创造/加入房间</a></li>
+                  <!-- <li><form action="/create"><button class="dropdown-item" name="out" value="out">退出房间</button></form></li> -->
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item text-danger" href="/logout">退出登录</a></li>
+                </ul>
+              </li>
+            </ul>
+          {% else %}
+            <!-- 未登录显示 -->
+            <div class="d-flex gap-3">
+              <a href="/register" class="btn btn-outline-primary">注册</a>
+              <a href="/login" class="btn btn-primary">登录</a>
+            </div>
+
+          {% endif %}
+        </div>
+
+      </div>
+    </nav>
+
+    <main class="container py-4 ">
+      {% block main %}{% endblock %}
+    </main>
+
+    <footer class="text-start py-3 position-absolute bottom-0 start-0 w-100 p-3">
+      <small>&copy; 2025 聊天室. 保留所有权利.</small>
+    </footer>
+    <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.8/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  </body>
+</html>

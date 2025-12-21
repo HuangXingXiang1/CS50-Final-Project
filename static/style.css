@@ -1,0 +1,380 @@
+body {
+  background-color: #151719;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+.wrap{
+display: flex;
+justify-content: center;
+align-items: center;
+min-height: 70vh; 
+}
+
+.card {
+width: 100%;
+max-width: 380px;
+background: #ffffff;
+padding: 30px 30px 25px;
+border-radius: 15px;
+border: 2px solid black;
+box-shadow: 0 4px 20px aqua
+}
+.full{
+  background-color: #ffffff;
+}
+
+.title-0 {
+font-size: 26px;
+font-weight: 700;
+}
+
+.form-control {
+padding-left: 40px;
+}
+
+.input-icon {
+position: absolute;
+left: 12px;
+top: 50%;
+transform: translateY(-50%);
+color: #0a0a0a;
+
+}
+.title {
+  display: flex;
+  align-items: center;
+  color: aqua;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 2s forwards;
+}
+.i{
+  font-size: 3rem;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.list-room{
+    margin-top: 5px;
+    display: flex;
+    width: 7.9rem;
+    flex-wrap: wrap;
+}
+
+.error{
+  font-size: 1 px;
+  color: red;
+}
+.message-box{
+  display: flex;
+  flex-direction: column;
+  border: 2px solid black;
+  border-radius: 20px;
+   background-color: #171616;
+  height: 80vh;
+  width: 80vw;
+  box-shadow: 0 0 5px rgb(0, 145, 255);
+  align-items: stretch;
+}
+.messages{
+  overflow-y: auto;
+  flex: 1;
+  width: 100%;
+}
+.messages span{
+  display: inline-block;
+  margin: 5px;
+}
+.messages span span{
+  padding: 3px;
+  border: 2px solid black;
+  border-radius: 10px;
+}
+.inputs{
+  padding: 10px;
+  display: flex;
+}
+
+#message{
+  flex:1;
+  color: #23cbfe;
+  background-color: #030305;
+  outline: none;
+  border: 2px solid #23cbfe;
+  box-shadow: 0 0 5px#23cbfe;
+}
+.messages::-webkit-scrollbar {
+  width: 6px !important;
+}
+.btn-1{
+  margin: 10px;
+  color: #23cbfe;
+  border: 3px solid #f8f8f8;
+  background-color: rgb(0, 0, 0);
+  border-radius: 30px;
+  box-shadow: 0 0 2px rgb(9, 0, 13);
+}
+.btn-1:hover{
+  background-color: #23cbfe;
+  color: #000000;
+  border:3px solid black;
+}
+.btn-1:active{
+  transform: scale(0.8);
+}
+#send-btn{
+  background-color: #171717;
+  border:2px solid #23cbfe;
+  box-shadow: 0 0 5px #00ffc8;
+  color: rgb(255, 255, 255);
+}
+#send-btn:hover{
+  background-color: #000000;
+  color: rgb(0, 234, 255);
+}
+#send-btn:active{
+  transform: scale(0.9);
+}
+.text{
+  display: block;
+  color: #23cbfe;
+}
+.time{
+  display: block;
+  font-size: 0.8rem;
+  color: rgb(0, 235, 176);
+}
+.tip{
+  font-size: 0.8rem;
+  color: gray;
+}
+.left{
+  margin-top: 10px;
+  margin-right: auto;
+}
+.room-list{
+  display: flex;
+  justify-content: center;
+}
+.header{
+  border-radius: 18px;
+  color: #00ffc8;
+  background-color: rgba(8, 1, 1, 0.8);
+  border: 2px solid rgb(0, 0, 0);
+  box-shadow: 0 0 5px rgb(0, 145, 255);
+}
+.sec{
+  display: inline-block;
+  background-color: #000000;
+  border-radius: 20px;
+  border: 2px solid beige;
+}
+.secr{
+  background-color: #00c1fc;
+  border: 2px solid black;
+  box-shadow: 0 0 5px #000000;
+  border-radius: 20px;
+}
+.secr:hover{
+  background-color: #000000;
+  color:#00c1fc;
+  border: 2px solid black;
+  box-shadow: 0 0 10px #000000;
+}
+.secr:active{
+  transform: scale(0.8);
+}
+.nvbg {
+    color: #e6e6e6 !important;
+    border-bottom: 1px solid rgba(80, 80, 100, 0.3) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1030 !important;
+    padding: 0.5rem 0 !important;
+}
+
+/* LOGO和标题样式 */
+.nvbg .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800 !important;
+    font-size: 1.4rem !important;
+    letter-spacing: -0.5px !important;
+    color: #4cc9f0 !important;
+    text-shadow: 0 0 10px rgba(76, 201, 240, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+.nvbg .navbar-brand:hover {
+    color: #72efdd !important;
+    transform: scale(1.03) !important;
+    text-shadow: 0 0 15px rgba(76, 201, 240, 0.6) !important;
+}
+
+.nvbg .navbar-brand span {
+    background: linear-gradient(45deg, #4cc9f0, #72efdd);
+    -webkit-text-fill-color: transparent !important;
+    font-weight: 700 !important;
+}
+
+/* 导航链接样式 */
+.nvbg .nav-link {
+    color: rgba(230, 230, 230, 0.85) !important;
+    font-weight: 500 !important;
+    margin: 0 0.5rem !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 6px !important;
+    position: relative !important;
+    transition: all 0.25s ease !important;
+    font-size: 0.95rem !important;
+}
+
+.nvbg .nav-link:hover,
+.nvbg .nav-link:focus {
+    color: #4cc9f0 !important;
+    background: rgba(76, 201, 240, 0.12) !important;
+    transform: translateY(-1px) !important;
+    text-shadow: 0 0 8px rgba(76, 201, 240, 0.4) !important;
+}
+
+.nvbg .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: #4cc9f0;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nvbg .nav-link:hover::after {
+    width: 70%;
+}
+
+/* 下拉菜单样式 */
+.nvbg .dropdown-menu {
+    background: rgba(30, 30, 46, 0.95) !important;
+    border: 1px solid rgba(80, 80, 100, 0.4) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5) !important;
+    border-radius: 10px !important;
+    padding: 0.5rem 0 !important;
+    margin-top: 4px !important;
+    animation: fadeInDown 0.3s ease !important;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.nvbg .dropdown-item {
+    color: rgba(230, 230, 230, 0.85) !important;
+    padding: 0.6rem 1.2rem !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+    border-radius: 6px !important;
+    margin: 0 0.5rem !important;
+}
+
+.nvbg .dropdown-item:hover {
+    background: rgba(76, 201, 240, 0.15) !important;
+    color: #4cc9f0 !important;
+    transform: translateX(3px);
+}
+
+.nvbg .dropdown-item.text-danger:hover {
+    background: rgba(239, 68, 68, 0.15) !important;
+    color: #ef4444 !important;
+    transform: translateX(3px);
+}
+
+.nvbg .dropdown-divider {
+    border-color: rgba(80, 80, 100, 0.4) !important;
+    margin: 0.4rem 0 !important;
+}
+
+.nvbg .navbar-toggler {
+    border: none !important;
+    padding: 0.4rem !important;
+    border-radius: 6px !important;
+    transition: all 0.2s ease !important;
+}
+
+.nvbg .navbar-toggler:hover {
+    background: rgba(76, 201, 240, 0.15) !important;
+}
+
+.nvbg .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(200, 200, 200, 0.9)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;
+}
+
+.nvbg .avatar {
+    border: 2px solid rgba(76, 201, 240, 0.5) !important;
+    box-shadow: 0 0 8px rgba(76, 201, 240, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+.nvbg .avatar:hover {
+    transform: scale(1.1) rotate(5deg) !important;
+    box-shadow: 0 0 15px rgba(76, 201, 240, 0.6) !important;
+    border-color: #4cc9f0 !important;
+}
+
+.nvbg .btn {
+    border-radius: 6px !important;
+    padding: 0.4rem 1rem !important;
+    font-weight: 500 !important;
+    transition: all 0.25s ease !important;
+    border: none !important;
+}
+
+.nvbg .btn-outline-primary {
+    background: transparent !important;
+    color: #4cc9f0 !important;
+    border: 1px solid rgba(76, 201, 240, 0.5) !important;
+}
+
+.nvbg .btn-outline-primary:hover {
+    background: rgba(76, 201, 240, 0.15) !important;
+    border-color: #4cc9f0 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 10px rgba(76, 201, 240, 0.2) !important;
+}
+
+.nvbg .btn-primary {
+    background: linear-gradient(45deg, #4cc9f0, #72efdd) !important;
+    color: #0f1731 !important;
+    font-weight: 600 !important;
+}
+
+.nvbg .btn-primary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 15px rgba(76, 201, 240, 0.4) !important;
+    filter: brightness(1.1) !important;
+}
+
+
+
+

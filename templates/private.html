@@ -1,0 +1,209 @@
+{% extends "layout.html" %}
+{% block title %}隐私房间{% endblock %}
+
+{% block main %}
+<div class="message-box">
+  <div class="header">
+    <span id="number"></span>
+    <span class="right">房间令牌：<strong>{{ room.token }}</strong></span>
+    <div class="title">
+      <h2>{{ room.name }}</h2>
+    </div>
+  </div>
+
+  <div id="key-area">
+    <input
+      type="password"
+      id="key-input"
+      placeholder="请输入密钥(至少16位)"
+      autocomplete="off"
+    >
+    <button id="key-confirm">确认密钥</button>
+    <span id="key-error" style="color:red; margin-left:10px;"></span>
+  </div>
+
+  <div class="messages" id="messages"></div>
+
+  <div class="inputs">
+    <input type="text" id="message" placeholder="加密信息" disabled>
+    <button id="send-btn" disabled>Send</button>
+  </div>
+</div>
+
+<script>
+// 获取DOM
+const messagesDiv = document.getElementById("messages");
+const messageInput = document.getElementById("message");
+const sendBtn = document.getElementById("send-btn");
+const keyInput = document.getElementById("key-input");
+const keyConfirm = document.getElementById("key-confirm");
+const keyError = document.getElementById("key-error");
+
+const protocol = location.protocol === "https:" ? "wss://" : "ws://";
+const socket = io(protocol + location.host, { transports: ["websocket"] });
+
+// 密钥初始化-局部变量避免污染全局
+let cryptoKey = null;
+
+// 异步函数生成派生密钥
+async function deriveKey(secret) {
+  // 初始实例
+  const enc = new TextEncoder();
+  // 预处理用户输入密钥
+  const material = await crypto.subtle.importKey(
+    "raw",
+    enc.encode(secret),
+    "PBKDF2",
+    false,
+    ["deriveKey"]
+  );
+  // 根据基本密钥派生出加密消息的强密钥
+  return crypto.subtle.deriveKey(
+    {
+      name: "PBKDF2",
+      salt: enc.encode("private-room-v1"),
+      iterations: 600000,
+      hash: "SHA-256"
+    },
+    material,
+    { name: "AES-GCM", length: 256 },
+    false,
+    ["encrypt", "decrypt"]
+  );
+}
+// 加密消息函数
+async function encrypt(text) {
+  // 生成12字节iv
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  // 拼接识别标头
+  const payload = "[E2EE]" + text;
+  // 将payload变为字节数组
+  const encoded = new TextEncoder().encode(payload);
+
+  // 使用AES-GCM加密
+  const cipher = await crypto.subtle.encrypt(
+    {name: "AES-GCM", iv},
+    cryptoKey,
+    encoded
+  );
+  // 返回base字符串
+  return btoa(JSON.stringify({
+    iv: Array.from(iv),
+    data: Array.from(new Uint8Array(cipher))
+  }))
+}
+// 解密函数
+async function decrypt(payload) {
+  // 将base解码再解码JSON字符串
+  const parsed = JSON.parse(atob(payload));
+  // 提取iv
+  const iv = new Uint8Array(parsed.iv);
+  // 提取密文
+  const data = new Uint8Array(parsed.data);
+
+  // 解密
+  const plain = await crypto.subtle.decrypt(
+    {name: "AES-GCM", iv},
+    cryptoKey,
+    data
+  );
+  // 将二进制变回utf-8
+  const text = new TextDecoder().decode(plain);
+  // 检查标头
+  if (!text.startsWith("[E2EE]")){
+    throw new Error("Invalid message");
+  }
+  // 返回明文
+  return text.slice(6);
+  
+}
+// 创建消息函数
+function createMessage(name, msg, time) {
+  const div = document.createElement("div");
+  div.className = "text";
+  const nameEl = document.createElement("strong");
+  const msgEl = document.createElement("span");
+  const timeEl = document.createElement("em");
+  timeEl.className = "time"
+
+  nameEl.textContent = name+": ";
+  msgEl.textContent = msg;
+  timeEl.textContent = time;
+
+  div.appendChild(timeEl);
+  div.appendChild(nameEl);
+  div.appendChild(msgEl);
+  
+
+  messagesDiv.appendChild(div);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+// 房间状态改变函数
+function enableChat() {
+  messageInput.disabled = false;
+  sendBtn.disabled = false;
+  document.getElementById("key-area").style.display = "none";
+}
+
+// 验证密钥
+async function verifiKey(){
+  const secret = keyInput.value.trim();
+
+  if (secret.length < 16) {
+    keyError.textContent = "密钥至少 16 位";
+    return;
+  }
+  try {
+    cryptoKey = await deriveKey(secret);
+    enableChat();
+  } catch {
+    keyError.textContent = "密钥初始化失败";
+  }
+};
+keyInput.addEventListener("keydown", e => {
+  if (e.key === "Enter" && !e.shiftKey){
+    e.preventDefault();
+    verifiKey()
+  }
+})
+keyConfirm.onclick = verifiKey
+// 监听消息事件
+socket.on("message", async data => {
+  if (data.member !== undefined) {
+    document.getElementById("number").innerHTML =
+      "<strong>人数</strong>: " + data.member;
+    return;
+  }
+
+  if (!cryptoKey) {
+    createMessage("系统", "⚠ 未输入密钥，无法解密消息", data.create_time);
+    return;
+  }
+
+  try {
+    const text = await decrypt(data.message);
+    createMessage(data.name, text, data.create_time);
+  } catch {
+    createMessage("系统", "❌ 解密失败（密钥错误）", data.create_time);
+  }
+});
+
+// 向服务器发送密文
+async function sendMessage() {
+  if (!cryptoKey) return;
+  const text = messageInput.value.trim();
+  if (!text) return;
+
+  const cipher = await encrypt(text);
+  socket.emit("message", { message: cipher });
+  messageInput.value = "";
+}
+
+sendBtn.onclick = sendMessage;
+messageInput.addEventListener("keydown", e => {
+  if (e.key === "Enter" && !e.shiftKey){
+    e.preventDefault();
+    sendMessage();
+}});
+</script>
+{% endblock %}

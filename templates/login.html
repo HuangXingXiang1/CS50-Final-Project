@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block title %}登录{% endblock %}
+
+{% block main %}
+
+
+<div class="wrap">
+
+  <div class="card">
+
+    <div class="text-center mb-4">
+      <div class="title-0">欢迎回来</div>
+      <div class="text-secondary">请先登录</div>
+    </div>
+
+    <form action="/login" method="post">
+
+      <div class="mb-3 position-relative">
+        <i class="input-icon bi bi-person-fill"></i>
+        <input autocomplete="off" required name="username" type="text"
+               class="form-control" placeholder="用户名">
+      </div>
+
+      <div class="mb-3 position-relative">
+        <i class="input-icon bi bi-lock-fill"></i>
+        <input autocomplete="off" required  name="password" type="password"
+               class="form-control" placeholder="密码">
+      </div>
+
+      <button class="btn btn-primary w-100 py-2" type="submit">登录</button>
+
+    </form>
+    <p class="error"><strong>{{error}}</strong></p>
+
+    <div class="text-center mt-3">
+      <small>没有账号？
+        <a href="/register" class="text-decoration-none">注册</a>
+      </small>
+    </div>
+
+  </div>
+
+</div>
+
+<link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+{% endblock %}

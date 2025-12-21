@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block title %}创造或者加入{% endblock %}
+
+{% block main %}
+
+     <style>
+        .wrap{
+            display: flex;
+            justify-content: center;
+            align-items: start;
+            margin: 100px;
+            min-height: 70vh; 
+        }
+    </style>
+
+    <h2 class="title">创造或加入</h2>
+    <div class="wrap">
+        <div class="card">
+            <div>
+                <label>Name:</label>
+                <form action="/create" method="post">
+                    <input name="room_name" type="text" autocomplete="off" autofocus placeholder="房间名" required class="full">
+                    <button class="btn" type="submit" name="create" value="1">创造房间</button>
+                </form>
+            </div>
+            <div>
+                <label>Token:</label>
+                <form action="/create" method="post">
+                    <input name="token" type="password" autocomplete="off" placeholder="房间令牌"required class="full">
+                    <button class="btn" type="submit" name="join" value="1">加入房间</button>
+                    <hr>
+                </form>
+                <p class="error"><strong>{{error}}</strong></p>
+            </div>
+            <div class="sec">
+                <form action="/private" method="post">
+                    <button class="secr" type="submit" name="secret" value="1">隐私房间</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+     
+{% endblock %}
+
